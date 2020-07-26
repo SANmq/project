@@ -1,0 +1,115 @@
+{% macro set_css(css) %}
+    {% for url in css %}
+        <link rel="stylesheet" href="{{ url }}">
+    {% endfor %}
+{% endmacro %}
+
+{% macro set_js(js) %}
+    {% for url in js %}
+        <script src="{{ url }}"></script>
+    {% endfor %}
+{% endmacro %}
+
+{% macro table(header,index,data) %}
+    <div class="corner">
+        {% for frozCol in index %}
+            <div class="column">
+                <div>{{ frozCol }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="header">
+        {% for head in header %}
+            <div>{{ head }}</div>
+        {% endfor %}
+    </div>
+    <div class="index">
+        {% for item in data %}
+            {% for frozCol in index %}
+                <div>{{ item[frozCol] }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="data">
+        {% for item in data %}
+            {% for head in header %}
+                <div>{{ item[head] }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro foldTable(header,data) %}
+    <div class="g-table">
+        <div class="thead">
+            <div class="tr">
+                {% for head in header %}
+                    <div class="th">{{ head }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tbody">
+            {% for item in data %}
+                <div class="tr">
+                    <div class="total">
+                        {% for i in item[total] %}
+                            {% for v in header %}
+                                <div class="td">{{ i[v] }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% for j in item[detial] %}
+                        <div class="detail">
+                            {% for k in header %}
+                                <div class="td">{{ j[k] }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro doubleFoldTable(header,data) %}
+    <div class="g-table">
+        <div class="thead">
+            <div class="tr">
+                {% for head in header %}
+                    <div class="th">{{ head }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="tbody">
+            {% for item in data %}
+                <div class="tr">
+                    {% for key,value in data.items() %}
+                        <div class="firstTotal">
+                            <div class="total">
+                                {% for i in header %}
+                                    <div class="td">
+                                        value[total][i]
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% for m,n in value[detail].items() %}
+                                <div class="secondTotal">
+                                    <div class="total">
+                                        {% for j in header %}
+                                            <div class="td">{{ n[total][j] }}</div>
+                                        {% endfor %}
+                                        {% for k,v in n[detail].items() %}
+                                            {% for j in header %}
+                                                v[j]
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
