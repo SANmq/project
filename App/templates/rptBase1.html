@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from 'function.html' import set_css,renderUL,set_js,simpleTable %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block style %}
+    {{ set_css(css) }}
+{% endblock %}
+
+{% block body %}
+    <div class="layout">
+        <div>{{ title }}</div>
+        <div>
+            <div>
+                <div class="now">
+                    <div>当前时间:</div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="user">欢迎：{{ user.name }}！</div>
+            </div>
+            <div>
+                <div>{{ smallTitle }}</div>
+                <div>{{ simpleTable(top,"top") }}</div>
+            </div>
+        </div>
+        <div>
+            {{ renderUL(tableList,0) }}
+        </div>
+        <div>
+            <div class="toolBar"><a id="download" class="download-button" href="javascript:void(0)">下载</a>
+                <a id="select" class="select-button" href="javascript:void(0)">查询</a>
+                <a id="changeCol" class="compare-button" href="javascript:void(0)">对比字段切换</a>
+                <div class="filter">
+                    <label for="t0" class="timeFilter">周期一</label><input id="t0" type="text">
+                    <label for="t1" class="timeFilter">周期二</label><input id="t1" type="text">
+                    <label for="goodFilter">商品筛选</label><input type="text" id="goodFilter">
+                </div>
+            </div>
+            <div class="tableArea"></div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ set_js(js) }}
+{% endblock %}

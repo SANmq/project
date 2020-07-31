@@ -1,0 +1,68 @@
+.g-table {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.g-table .thead {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: #333333;
+    color: white;
+}
+
+.g-table .tbody {
+    margin-top: 30px;
+    height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.g-table .tbody::-webkit-scrollbar {
+    width: 0;
+}
+
+.g-table .tr {
+    height: 30px;
+    display: grid;
+    grid-template-columns: auto;
+    grid-auto-flow: column;
+}
+
+.g-table .tbody .tr:hover {
+    background-color: lightskyblue;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px black;
+}
+
+.g-table .th, .g-table .td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.off ~ .detail {
+    display: none;
+}
+
+.g-table .total {
+    background-color: #aaaaaa;
+    color: #ffa;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    text-align: center;
+}
+
+td, th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: inset 0 0 1px 1px #333;
+}
+
+

@@ -1,0 +1,144 @@
+.layout {
+    display: grid;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 150px auto;
+    width: 100vw;
+    height: 100vh;
+}
+
+.layout > div:first-child {
+    text-align: center;
+    line-height: 150px;
+    background-color: black;
+    color: white;
+    text-shadow: 2px 2px 4px #ffffaa,
+    2px 2px 4px #ffffaa;
+    font-size: 40px;
+    user-select: none;
+}
+
+.layout > div:nth-of-type(3) {
+    background-color: #222;
+    color: white;
+    text-shadow: 2px 2px 4px #ffffaa,
+    2px 2px 4px #ffffaa;
+}
+
+
+.layout > div:nth-of-type(3) ul {
+    font-size: 16px;
+    text-align: center;
+}
+
+.layout > div:nth-of-type(3) ul li {
+    height: 50px;
+    line-height: 50px;
+    cursor: pointer;
+    transition: all .3s linear;
+}
+
+.layout > div:nth-of-type(3) ul li:not([class~=select]):hover {
+    font-weight: bolder;
+    font-size: 24px;
+    background: linear-gradient(purple, darkblue);
+}
+
+.layout > div:nth-of-type(3) ul .select {
+    background-color: #111111;
+    box-shadow: inset -5px -5px 5px 0 #aaaaaa;
+}
+
+
+.layout > div:nth-of-type(2) {
+    display: grid;
+    background-color: #111;
+    color: white;
+    grid-template-columns: 100px 1fr;
+}
+
+.layout > div:nth-of-type(2) > div:first-child {
+    width: 100px;
+    display: flex;
+    flex-flow: column;
+}
+
+.layout > div:nth-of-type(2) > div:first-child .now {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.layout > div:nth-of-type(2) > div:first-child .user {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layout > div:nth-of-type(2) > div:nth-of-type(2) {
+    flex-grow: 1;
+}
+
+.layout > div:nth-of-type(2) > div:nth-of-type(2) > div:first-child {
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+.layout > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) table {
+    width: 100%;
+    text-align: center;
+}
+
+
+
+.layout > div:nth-of-type(4) {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.layout .toolBar {
+    background-color: #101010;
+    height: 30px;
+    display: grid;
+    grid-template-columns: 70px 70px 120px auto;
+    grid-column-gap: 10px;
+    color: #ffffaa;
+
+}
+
+.layout .toolBar [class$="button"] {
+    text-align: center;
+    line-height: 30px;
+    background-color: #008a8a;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.layout .tableArea {
+    height: 100%;
+}
+
+.layout .toolBar .filter {
+    min-width: 720px;
+    overflow: hidden;
+}
+
+.layout .toolBar .filter > * {
+    float: left;
+    height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 30px;
+}
+
+.layout .toolBar .filter input {
+    height: 20px;
+    margin: 4px 4px;
+    text-align: left;
+}
+

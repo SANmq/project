@@ -1,0 +1,6 @@
+@import "tableStyle.css";
+
+#tb0 .tr {
+    grid-template-columns: repeat(2, 8%) repeat(12, 7%);
+}
+

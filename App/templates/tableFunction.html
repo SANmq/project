@@ -1,0 +1,65 @@
+{%- macro tableType1(thead,tbody,AreaID) -%}
+    <div id="{{ AreaID }}" class="tbType1">
+        <div class="thead">
+            <div class="tr">{%- for column in thead -%}
+                <div class="th">{{ column }}</div>{%- endfor -%}</div>
+        </div>
+        <div class="tbody">{%- for piece in tbody -%}
+            <div class="tr">{%- for column in thead -%}
+                <div class="td">{{ piece[column] }}</div>{%- endfor -%}</div>{%- endfor -%}</div>
+    </div>{%- endmacro -%}
+{%- macro tableType2(index,showThead,thead,tRound1,tRound2,compare,tableID) -%}
+    <table id="{{ tableID }}" class="tbType2">
+        <thead>
+        <tr>
+            {%- for i in index -%}
+                <th rowspan="2">{{ i }}</th>
+            {%- endfor -%}
+            <th colspan="{{ showThead|length }}">周期一</th>
+            <th colspan="{{ showThead|length }}">周期二</th>
+            <th colspan="{{ showThead|length }}">周期一对比周期二</th>
+        </tr>
+        <tr>
+            {%- for i in range(3) -%}
+                {%- for j in thead -%}
+                    {% if j in showThead %}
+                        <th class="show"><span>{{ j }}</span></th>
+                    {% else %}
+                        <th class="hide"><span>{{ j }}</span></th>
+                    {% endif %}
+                {%- endfor -%}
+            {%- endfor -%}
+        </tr>
+        </thead>
+        <tbody>
+        {%- for item in tRound1 -%}
+            <tr>
+                {%- for foo in index -%}
+                    <td><span>{{ item[foo] }}</span></td>
+                {%- endfor -%}
+                {%- for foo in thead -%}
+                    {%- if foo in showThead -%}
+                        <td class="show"><span>{{ item[foo] }}</span></td>
+                    {%- else -%}
+                        <td class="hide"><span>{{ item[foo] }}</span></td>
+                    {%- endif -%}
+                {%- endfor -%}
+                {%- for foo in thead -%}
+                    {%- if foo in showThead -%}
+                        <td class="show"><span>{{ tRound2[item["商品ID"]][foo] }}</span></td>
+                    {%- else -%}
+                        <td class="hide"><span>{{ tRound2[item["商品ID"]][foo] }}</span></td>
+                    {%- endif -%}
+                {%- endfor -%}
+                {%- for foo in thead -%}
+                    {%- if foo in showThead -%}
+                        <td class="show"><span>{{ compare[item["商品ID"]][foo] }}</span></td>
+                    {%- else -%}
+                        <td class="hide"><span>{{ compare[item["商品ID"]][foo] }}</span></td>
+                    {%- endif -%}
+                {%- endfor -%}
+            </tr>
+        {%- endfor -%}
+        </tbody>
+    </table>
+{%- endmacro -%}

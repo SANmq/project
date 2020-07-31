@@ -1,8 +1,22 @@
 {% extends 'base.html' %}
+{% from 'function.html' import foldTable,set_css %}
+
 
 {% block title %}
-    丹玥后台报表
+    {{ titile }}
 {% endblock %}
 {% block style %}
+    {{ set_css(css) }}
+{% endblock %}
 
+{% block body %}
+    <div class="">
+        <div>这里放单品筛选，默认显示3个</div>
+        这里放对比数据
+    </div>
+    {{ foldTable(table["header"],table["data"],table["sortKey"]) }}
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static',filename ='js/common.js') }}"></script>
 {% endblock %}

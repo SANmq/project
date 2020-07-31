@@ -1,0 +1,113 @@
+
+        tr1 = tr1.with_entities(func.sum(ProSaleD.UV).label("UV"),
+                                func.sum(ProSaleD.sale_amt).label("sale_amt"),
+                                func.sum(ProSaleD.sale_num).label("sale_num"),
+                                (func.sum(ProSaleD.sale_num) / func.sum(ProSaleD.UV)).label("sale_roc"),
+                                func.sum(ProSaleD.gwc_qty).label("gwc_qty"),
+                                (func.sum(ProSaleD.gwc_num) / func.sum(ProSaleD.UV)).label("gwc_roc"),
+                                (func.sum(ProSaleD.sale_amt) / func.sum(ProSaleD.UV)).label("UV_value")
+                                ).first()
+        tr2 = tr2.with_entities(func.sum(ProSaleD.UV).label("UV"),
+                                func.sum(ProSaleD.sale_amt).label("sale_amt"),
+                                func.sum(ProSaleD.sale_num).label("sale_num"),
+                                (func.sum(ProSaleD.sale_num) / func.sum(ProSaleD.UV)).label("sale_roc"),
+                                func.sum(ProSaleD.gwc_qty).label("gwc_qty"),
+                                (func.sum(ProSaleD.gwc_num) / func.sum(ProSaleD.UV)).label("gwc_roc"),
+                                (func.sum(ProSaleD.sale_amt) / func.sum(ProSaleD.UV)).label("UV_value")
+                                ).first()
+        tRound1.append({
+            "商品ID": good,
+            "商品简称": PRO_SALE_ID[good],
+            "访客数": int(tr1.UV),
+            "销售额": "%.2f" % (tr1.sale_amt if tr1.sale_amt else 0),
+            "买家数": int(tr1.sale_num),
+            "转化率": "%.2f" % (tr1.sale_roc * 100) + "%",
+            "加购件数": int(tr1.gwc_qty),
+            "加购率": "%.2f" % (tr1.gwc_roc * 100) + "%",
+            "UV价值": "%.2f" % tr1.UV_value
+        })
+
+        tRound2.append({
+            "商品ID": good,
+            "商品简称": PRO_SALE_ID[good],
+            "访客数": int(tr2.UV),
+            "销售额": "%.2f" % (tr2.sale_amt if tr2.sale_amt else 0),
+            "买家数": int(tr2.sale_num),
+            "转化率": "%.2f" % (tr2.sale_roc * 100) + "%",
+            "加购件数": int(tr2.gwc_qty),
+            "加购率": "%.2f" % (tr2.gwc_roc * 100) + "%",
+            "UV价值": "%.2f" % tr2.UV_value
+        })
+
+
+
+
+
+
+
+
+    def temp(a, b, good):
+        n = getTimedelta(a, b)
+        sale = ProSaleD.query.filter(ProSaleD.goods_id == good, ProSaleD.createtime >= t0S, ProSaleD.createtime <= t0E)
+        flow = ProFlowD.query.filter(ProFlowD.goods_id == good, ProSaleD.createtime >= t0S, ProSaleD.createtime <= t0E,
+                                     ProFlowD.flow_source_detail == "淘宝客")
+        error = ""
+
+
+        if len(sale.all()) < n:
+            for t in getTimedelta(a, b):
+                if sale.filter(ProSaleD.createtime == t).first():
+                    continue
+                else:
+                    error += "商品{}{}在时刻{}的销售数据不存在&".format(FOW_GOOD_ID[good], good, t)
+        if len(flow.all()) < n:
+            for t in getTimedelta(a, b):
+                if sale.filter(ProSaleD.createtime == t).first():
+                    continue
+                else:
+                    error += "商品{}{}在时刻{}的淘客数据不存在&".format(FOW_GOOD_ID[good], good, t)
+        sale = sale.with_entities(func.sum(ProSaleD.UV).label("UV"),
+                                  func.sum(ProSaleD.sale_amt).label("sale_amt"),
+                                  func.sum(ProSaleD.sale_num).label("sale_num"),
+                                  ).first()
+        flow = flow.with_entities(func.sum(ProSaleD.UV).label("UV"),
+                                  func.sum(ProSaleD.sale_amt).label("sale_amt"),
+                                  func.sum(ProSaleD.sale_num).label("sale_num"),
+                                  ).first()
+        r = {
+            "商品ID": good,
+            "商品名称": GOOD_DICT[good],
+            "访客数": f(sale.UV) - f(flow.UV),
+            "销售额": f(sale.sale_amt) - f(flow.sale_amt),
+            "买家数": f(sale.sale_num) - f(flow.sale_num),
+        }
+        r["支付转化率"] = d(r["买家数"], r["访客数"])
+        r["UV价值"] = d(r["销售额"], r["访客数"])
+        return r, error
+
+    tRound1, tRound2, compare = [], [], []
+    for i in FOW_GOOD_ID:
+        print(i)
+        r0, er0 = temp(t0S, t0E, i)
+        r1, er1 = temp(t1S, t1E, i)
+        err += (er0 + er1)
+        c = {}
+        for k, v in r0.items():
+            if isinstance(v, str):
+                c[k] = v
+            else:
+                c[k] = d(r0[k], r1[k]) - 1
+        tRound1.append(g(r0))
+        tRound2.append(g(r1))
+        compare.append(g(c, True))
+    data["tableData"] = {
+        "title": "单品销售对比",
+        "index": index,
+        "thead": thead,
+        "showThead": showThead,
+        "tRound1": tRound1,
+        "tRound2": tRound2,
+        "compare": compare,
+        "tableID": "tb1"
+    }
+    data["error"] = err

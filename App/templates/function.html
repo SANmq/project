@@ -39,30 +39,36 @@
     </div>
 {% endmacro %}
 
-{% macro foldTable(header,data) %}
+{% macro createRow(dict,key,type) %}
+    <div class="tr" style="grid-template-columns: repeat({{ key|length }},1fr)">
+        {% for item in key %}
+            {% if type=="td" %}
+                <div class="td">{{ dict[item] }}</div>
+            {% else %}
+                <div class="th">{{ dict[item] }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro foldTable(header,data,sortKey) %}
     <div class="g-table">
         <div class="thead">
-            <div class="tr">
+            <div class="tr" style="grid-template-columns: repeat({{ header|length }},1fr)">
                 {% for head in header %}
                     <div class="th">{{ head }}</div>
                 {% endfor %}
             </div>
         </div>
         <div class="tbody">
-            {% for item in data %}
-                <div class="tr">
-                    <div class="total">
-                        {% for i in item[total] %}
-                            {% for v in header %}
-                                <div class="td">{{ i[v] }}</div>
-                            {% endfor %}
-                        {% endfor %}
+            {% for key,value in data.items() %}
+                <div class="piece">
+                    <div class="total {{ loop.index0|choose("on","off") }}">
+                        {{ createRow(value["total"],header,"td") }}
                     </div>
-                    {% for j in item[detial] %}
+                    {% for item in value["detail"]|dictSortBy(sortKey) %}
                         <div class="detail">
-                            {% for k in header %}
-                                <div class="td">{{ j[k] }}</div>
-                            {% endfor %}
+                            {{ createRow(item,header,"td") }}
                         </div>
                     {% endfor %}
                 </div>
@@ -112,4 +118,83 @@
             {% endfor %}
         </div>
     </div>
+{% endmacro %}
+
+{# value 是一个二维列表 #}
+{% macro render_row(value) %}
+    {% for row in value %}
+        <div class="tr">
+            {% for item in row %}
+                <div class="th">{{ item }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+
+{% macro render_data(columns,data) %}
+    {% for item in data %}
+        <div class="tr">
+            {% for column in columns %}
+                <div class="td">{{ item[column] }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+{% macro oldTable(conner,columns,data) %}
+    <div class="oldT">
+        <div class="conner">{{ render_row(conner) }}</div>
+        <div class="columns">{{ render_row(columns) }}</div>
+        <div class="index">{{ render_row(conner,data) }}</div>
+        <div class="data">{{ render_row(columns,data) }}</div>
+    </div>
+{% endmacro %}
+
+{% macro renderSideBar(value) %}
+    {#   传入字典形式为[{展示：超链接},.....] #}
+    <ul>
+        {% for item in value %}
+            {% for k,v in item.items() %}
+                <li><a href="{{ v }}">{{ k }}</a></li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro renderUL(value,active) %}
+    <ul>
+        {% for item in value %}
+            {% if loop.index0==active %}
+                <li bind="{{ item }}" class="select">{{ item }}</li>
+            {% else %}
+                <li bind="{{ item }}">{{ item }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro simpleTable(table,id) %}
+    {% if id %}
+        <table id="{{ id }}">
+    {% else %}
+        <table>
+    {% endif %}
+<thead>
+<tr>
+    {% for item in table["thead"] %}
+        <th>{{ item }}</th>
+    {% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for item in table["tbody"] %}
+    <tr>
+        {% for i in table["thead"] %}
+            <td>{{ item[i] }}</td>
+        {% endfor %}
+    </tr>
+{% endfor %}
+</tbody>
+</table>
 {% endmacro %}

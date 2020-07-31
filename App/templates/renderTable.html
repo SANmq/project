@@ -1,0 +1,10 @@
+{%- from "tableFunction.html" import tableType1,tableType2 -%}
+{%- if table["title"]=="单品销售展示" -%}
+    {{ tableType1(table["thead"],table["tbody"],tableId) }}
+{%- endif -%}
+{%- if table["title"]=="单品销售对比" -%}
+    {{ tableType2(table["index"],table["showThead"],table["thead"],table["tRound1"]|dictSortBy("访客数"),table["tRound2"],table["compare"],table["tableID"]) }}
+{%- endif -%}
+{%- if table["title"]=="单品剔除淘客对比" -%}
+    {{ tableType2(table["index"],table["showThead"],table["thead"],table["tRound1"]|dictSortBy("访客数"),table["tRound2"],table["compare"],table["tableID"]) }}
+{%- endif -%}
